@@ -54,7 +54,7 @@ def get_all_coors(path1):
 def get_intersections(path1, path2):
   gen1 = get_all_coors(path1)
   gen2 = get_all_coors(path2)
-  return set(gen1) & set(gen2) # only for sets
+  return set(gen1) & set(gen2) # only for sets - find interesection
 
 def get_manhattan_distance(origin, coor):
   x1, y1 = origin

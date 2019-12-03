@@ -1,6 +1,6 @@
 import copy
 
-f = open('day2.txt', 'r')
+f = open('../input/day2.txt', 'r')
 lines = f.readlines()
 new_codes = lines[0].split(",")
 codes_copy = []
@@ -26,12 +26,12 @@ def get_output(codes):
 
   return codes[0]
 
-
-for i in range(157):
-  for j in range(157):
-    codes = copy.deepcopy(codes_copy)
-    codes[1] = i
-    codes[2] = j
-    if get_output(codes) == 19690720:
-      print(i, 'i')
-      print(j, 'j')
+def solve2():
+  for i in range(157):
+    for j in range(157):
+      codes = copy.deepcopy(codes_copy)
+      codes[1] = i
+      codes[2] = j
+      if get_output(codes) == 19690720:
+        print(i, 'i')
+        print(j, 'j')
