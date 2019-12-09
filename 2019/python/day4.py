@@ -32,10 +32,3 @@ def solve2():
     if is_increasing(i) and 2 in custom_rle(i):
       total += 1
   print(total)
-
-
-
-solve2()
-
-### TO DO
-# TESt for 333555 fails
