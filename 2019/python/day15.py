@@ -30,7 +30,7 @@ def walk_curr_move(intcode, curr_move):
       x += 1
     else:
       return ValueError("Invalid move")
-  return comp, (x,y)
+  return intcode, (x,y)
     
 movement_commands = [1, 2, 3, 4]
 walls = set()
@@ -82,3 +82,72 @@ def solve():
           queue.append(new_move)
         comp.get_output(opp[m], 1)
 
+def build_map():
+  initialise_queue()
+  while len(queue) > 0:
+    curr_move = queue.pop(0)
+    comp = IntCode('../input/day15.txt')
+    comp, curr_pos = walk_curr_move(comp, curr_move)
+    for m in movement_commands:
+      output = comp.get_output(m, 1)[0]
+      if output == 0:
+        new_pos = get_coor(m, curr_pos)
+        walls.add(new_pos)
+      else:
+        if output == 2:
+          found = get_coor(m, curr_pos)
+        new_move = copy.deepcopy(curr_move)
+        new_move.append(m)
+        new_pos = get_coor(m, curr_pos)
+        if new_pos not in seen:
+          seen.append(new_pos)
+          queue.append(new_move)
+        comp.get_output(opp[m], 1)
+  print('found', found)
+
+  f = open('day15-out2.txt', 'w')
+  f.write(f'{found[0]} {found[1]} O\n')
+  for i in walls:
+    f.write(f'{i[0]} {i[0]} #\n')
+  for j in seen:
+    f.write(f'{i[0]} {i[0]} .\n')
+
+
+def solve2():
+  f = open('day15-out.txt', 'r')
+  lines = f.readlines()
+  walls = set()
+  available = set()
+  oxygen = set()
+
+  for line in lines:
+    x, y, c = line.strip().split(' ')
+    x = int(x)
+    y = int(y)
+    if c == 'O':
+      oxygen.add((x, y))
+    elif c == '#':
+      walls.add((x, y))
+    else:
+      available.add((x, y))
+
+  def find_adjacent(pos):
+    x, y = pos
+    return [(x+1, y), (x-1, y), (x, y+1), (x, y-1)]
+
+  time = 0
+  while True:
+    adj_set = set()
+    for tile in oxygen:
+      adj_set.update(find_adjacent(tile))
+
+    # remove infected from available set
+    adj_set = adj_set - walls
+    available = available - (adj_set)
+
+    # add infected to oxygen set
+    oxygen = oxygen.union(adj_set)
+    time += 1
+    if len(available) == 0:
+      break
+  print('time taken', time)
