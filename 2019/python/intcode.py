@@ -1,6 +1,5 @@
 class IntCode:
   def __init__(self, filename):
-    # self.file = file
     f = open(filename, 'r')
     lines = f.readlines()
     icodes = lines[0].split(",")
@@ -20,8 +19,6 @@ class IntCode:
 
       if opcode == 4:
         outputs.append(val1)
-        # print('hi', len(outputs))
-
         self.curr_pointer += 2
 
       elif opcode == 3:
