@@ -16,8 +16,8 @@ def solve1():
     right.sort()
 
     sum_diffs = 0
-    for i in range(len(left)):
-        sum_diffs += abs(left[i] - right[i])
+    for i, j in zip(left, right):
+        sum_diffs += abs(i - j)
     print('Difference score is', sum_diffs)
 
 
