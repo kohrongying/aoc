@@ -91,50 +91,31 @@ def solve_line(line):
 
 
 def solve2v2():
-    disabled_line = "don't()"
-    enabled_line = 'do()'
-    newlines = []
-    pointer = 0
     enabled = True
-    state = State.CORRUPT
-
-    def reset():
-        # state, pointer
-        return State.CORRUPT, 0
-
+    newlines = []
     for line in inp:
-        newline = ''
-        for ch in line:
-            if state == State.CORRUPT:
-                if ch == enabled_line[pointer]:
-                    state = State.DO
-                    pointer += 1
-                else:
-                    newline += ch if enabled else ''
-
-            elif state == State.DO:
-                if ch == enabled_line[pointer]:
-                    pointer += 1
-                    if pointer == len(enabled_line):
-                        enabled = True
-                        state, pointer = reset()
-                elif ch == disabled_line[pointer]:
-                    pointer += 1
-                    state = State.DONT
-                else:
-                    state, pointer = reset()
-
-            elif state == State.DONT:
-                if ch == disabled_line[pointer]:
-                    pointer += 1
-                    if pointer == len(disabled_line):
-                        enabled = False
-                        state, pointer = reset()
-
-                else:
-                    state, pointer = reset()
-
-        newlines.append(newline)
+        new_line = '' # Rebuild the line by removing donts
+        donts = [m.start() for m in re.finditer("don't\(\)", line)]
+        dos = [m.start() for m in re.finditer("do\(\)", line)]
+        curr_index = 0
+        while True:
+            if enabled:
+                try:
+                    idx = min([i for i in donts if i > curr_index])
+                    new_line += line[curr_index:idx]
+                    curr_index = idx
+                    enabled = False
+                except:
+                    new_line += line[curr_index:]
+                    break
+            else:
+                try:
+                    idx = min([i for i in dos if i > curr_index])
+                    curr_index = idx
+                    enabled = True
+                except:
+                    break
+        newlines.append(new_line)
     return newlines
 
 
